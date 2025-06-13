@@ -13,10 +13,14 @@ Criar uma aplicação backend usando FastAPI, com pipeline automatizado no Jenki
 projeto-kubernetes-pb-desafio-jenkins/
 │
 ├── backend/
+│   ├── src/
+│       ├──App.js
+│       ├──Index.js
+│       ├──api.js
+├── frontend/
 │   ├── main.py
 │   ├── Dockerfile
 │   ├── requirements.txt
-│
 ├── k8s/
 │   ├── deployment.yaml
 │   ├── service.yaml
@@ -168,7 +172,7 @@ ssh -R 0:localhost:8000 serveo.net
 Esse comando retorna uma URL pública, como:
 ```bash
 https://seu-projeto.serveo.net
-
+![alt text](image-9.png)
 ## 8. Integração com Webhook do GitHub (CI/CD)
 
 - Através da URL pública fornecida pelo túnel (`serveo.net`), foi configurado um **Webhook** no GitHub para notificar o Jenkins a cada push no repositório.
@@ -190,9 +194,63 @@ https://seu-projeto.serveo.net
      `GitHub hook trigger for GITScm polling`
 ![alt text](image-8.png)
 5. Ao realizar um `git push`, o GitHub envia uma requisição para a URL pública e o Jenkins inicia automaticamente a pipeline.
+![alt text](jenkins.gif)
 
-### Prints recomendados para incluir:
-- Configuração do webhook no GitHub
-- Jenkins executando após o push
-- Jenkins Job `deploy-fastapi` com o log das etapas
-- Console de saída do Jenkins após execução bem-sucedida
+## 9. Como rodar o projeto localmente 🚀
+
+### ✅ Pré-requisitos:
+- Docker
+- Node.js e npm
+- Python 3.11+
+- Kubectl
+- Jenkins (opcional)
+- Conta no Docker Hub
+
+---
+
+### 📦 1. Clonar o repositório
+
+```bash
+git clone https://github.com/seu-usuario/seu-repositorio.git
+cd projeto-kubernetes-pb-desafio-jenkins
+
+### 🐍 2. Rodar o Backend localmente (FastAPI)
+
+```bash
+cd backend
+pip install -r requirements.txt
+uvicorn main:app --host 0.0.0.0 --port 8000
+
+### ⚛️ 3. Rodar o Frontend localmente (React)
+
+```bash
+cd ../frontend
+npm install
+npm start
+Acesse: http://localhost:3000
+
+### 🐳 4. Build e push da imagem Docker
+
+```bash
+cd backend
+docker build -t mauriciobertoldo/backend-fastapi:latest .
+docker login
+docker push mauriciobertoldo/backend-fastapi:latest
+
+### ☸️ 5. Aplicar o deploy no Kubernetes
+
+```bash
+kubectl apply -f k8s/deployment.yaml
+kubectl apply -f k8s/service.yaml
+
+kubectl get pods
+kubectl get svc
+
+Acesse o serviço via NodePort em:
+```bash
+http://localhost:30001/color
+
+### 🌐 6. Expor para internet com Serveo (opcional, para Webhook)
+
+```bash
+ssh -R 8000:localhost:8000 serveo.net
