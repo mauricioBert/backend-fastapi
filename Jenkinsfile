@@ -1,5 +1,10 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'python:3.11-slim'  // imagem oficial Python leve
+            args '-v /var/run/docker.sock:/var/run/docker.sock'  // se precisar docker-in-docker
+        }
+    }
 
     environment {
         DOCKER_HUB_CREDENTIALS = 'docker-hub-credentials-id'
@@ -15,15 +20,13 @@ pipeline {
 
         stage('Install dependencies') {
             steps {
-                bat 'pip install -r requirements.txt'
+                sh 'pip install -r requirements.txt'
             }
         }
 
         stage('Run tests') {
             steps {
                 echo 'Sem testes configurados, pulando etapa'
-                // Se tiver testes, troque o comando sh por bat
-                // bat 'pytest tests/'
             }
         }
 
