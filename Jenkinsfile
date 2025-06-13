@@ -1,14 +1,10 @@
 pipeline {
-    agent {
-        docker {
-            image 'python:3.11-slim'  // imagem oficial Python leve
-            args '-v /var/run/docker.sock:/var/run/docker.sock'  // se precisar docker-in-docker
-        }
-    }
+    agent any
 
     environment {
         DOCKER_HUB_CREDENTIALS = 'docker-hub-credentials-id'
         IMAGE_NAME = 'mauriciobertoldo/backend-fastapi'
+        WORKSPACE_DIR = 'C:/ProgramData/Jenkins/.jenkins/workspace/deploy-fastapi'
     }
 
     stages {
@@ -20,7 +16,9 @@ pipeline {
 
         stage('Install dependencies') {
             steps {
-                sh 'pip install -r requirements.txt'
+                bat """
+                docker run --rm -v ${WORKSPACE_DIR}:/app -w /app python:3.11-slim pip install -r requirements.txt
+                """
             }
         }
 
