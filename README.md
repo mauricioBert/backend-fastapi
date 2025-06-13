@@ -168,3 +168,31 @@ ssh -R 0:localhost:8000 serveo.net
 Esse comando retorna uma URL pública, como:
 ```bash
 https://seu-projeto.serveo.net
+
+## 8. Integração com Webhook do GitHub (CI/CD)
+
+- Através da URL pública fornecida pelo túnel (`serveo.net`), foi configurado um **Webhook** no GitHub para notificar o Jenkins a cada push no repositório.
+
+### Etapas seguidas:
+
+1. Criar um Job no Jenkins com o nome `deploy-fastapi`.
+2. No GitHub, acessar:
+   `Settings` → `Webhooks` → `Add webhook`
+3. Preencher os seguintes dados:
+   - **Payload URL**: `http://seu-projeto.serveo.net/job/deploy-fastapi/build?token=seu-token`
+   - **Content type**: `application/x-www-form-urlencoded`
+   - **Secret**: (opcional)
+   - Selecionar: `Just the push event`
+   - Ativar a opção `Active`
+![alt text](image-7.png)
+4. No Jenkins, ativar o gatilho:
+   - Marcar a opção:  
+     `GitHub hook trigger for GITScm polling`
+![alt text](image-8.png)
+5. Ao realizar um `git push`, o GitHub envia uma requisição para a URL pública e o Jenkins inicia automaticamente a pipeline.
+
+### Prints recomendados para incluir:
+- Configuração do webhook no GitHub
+- Jenkins executando após o push
+- Jenkins Job `deploy-fastapi` com o log das etapas
+- Console de saída do Jenkins após execução bem-sucedida
