@@ -71,7 +71,7 @@ Pipeline configurado via `Jenkinsfile` com as seguintes etapas:
 - **Build** da imagem Docker.
 - **Push** da imagem Docker para o Docker Hub.
 
-### Exemplo do Jenkinsfile:
+### Exemplo do Jenkinsfile:.
 
 ```groovy
 pipeline {
