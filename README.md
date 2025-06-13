@@ -41,6 +41,7 @@ projeto-kubernetes-pb-desafio-jenkins/
 ```bash
 # Rodar a aplicação local (exemplo com uvicorn)
 uvicorn main:app --host localhost --port 8000
+``` 
 ![alt text](image-2.png)
 ![alt text](image-3.png)
 ## 4. Docker
@@ -60,7 +61,7 @@ docker login
 
 # Push da imagem para o Docker Hub
 docker push mauriciobertoldo/backend-fastapi:latest
-
+``` 
 
 ## 5. Jenkins
 
@@ -135,7 +136,7 @@ pipeline {
         }
     }
 }
-
+``` 
 ## 6. Kubernetes
 
 - Serviço criado do tipo **NodePort** para expor o app externamente.
@@ -158,7 +159,7 @@ kubectl get svc
 
 # Testar o serviço localmente
 curl http://localhost:30001/color
-
+``` 
 ## 7. Exposição externa para Webhook (túnel)
 
 - Utilizado [serveo.net](https://serveo.net) para expor a porta `8000` localmente para a internet.
@@ -168,11 +169,13 @@ curl http://localhost:30001/color
 
 ```bash
 ssh -R 0:localhost:8000 serveo.net
-
+``` 
 Esse comando retorna uma URL pública, como:
+
 ```bash
 https://seu-projeto.serveo.net
 ![alt text](image-9.png)
+``` 
 ## 8. Integração com Webhook do GitHub (CI/CD)
 
 - Através da URL pública fornecida pelo túnel (`serveo.net`), foi configurado um **Webhook** no GitHub para notificar o Jenkins a cada push no repositório.
@@ -213,14 +216,14 @@ https://seu-projeto.serveo.net
 ```bash
 git clone https://github.com/seu-usuario/seu-repositorio.git
 cd projeto-kubernetes-pb-desafio-jenkins
-
+``` 
 ### 🐍 2. Rodar o Backend localmente (FastAPI)
 
 ```bash
 cd backend
 pip install -r requirements.txt
 uvicorn main:app --host 0.0.0.0 --port 8000
-
+``` 
 ### ⚛️ 3. Rodar o Frontend localmente (React)
 
 ```bash
@@ -228,7 +231,7 @@ cd ../frontend
 npm install
 npm start
 Acesse: http://localhost:3000
-
+``` 
 ### 🐳 4. Build e push da imagem Docker
 
 ```bash
@@ -236,7 +239,7 @@ cd backend
 docker build -t mauriciobertoldo/backend-fastapi:latest .
 docker login
 docker push mauriciobertoldo/backend-fastapi:latest
-
+``` 
 ### ☸️ 5. Aplicar o deploy no Kubernetes
 
 ```bash
@@ -245,15 +248,15 @@ kubectl apply -f k8s/service.yaml
 
 kubectl get pods
 kubectl get svc
-
+``` 
 Acesse o serviço via NodePort em:
 ```bash
 http://localhost:30001/color
-
+```
 ### 🌐 6. Expor para internet com Serveo (opcional, para Webhook)
 
 ```bash
 ssh -R 8000:localhost:8000 serveo.net
-
+```
 
 Obs: Não consegui fazer a tempo a parte dos desafios extras. :(
