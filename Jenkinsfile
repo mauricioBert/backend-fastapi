@@ -4,7 +4,6 @@ pipeline {
     environment {
         DOCKER_HUB_CREDENTIALS = 'docker-hub-credentials-id'
         IMAGE_NAME = 'mauriciobertoldo/backend-fastapi'
-        WORKSPACE_DIR = 'C:/ProgramData/Jenkins/.jenkins/workspace/deploy-fastapi'
     }
 
     stages {
@@ -14,11 +13,20 @@ pipeline {
             }
         }
 
+        stage('Debug workspace') {
+            steps {
+                bat 'dir'
+            }
+        }
+
         stage('Install dependencies') {
             steps {
-                bat """
-                docker run --rm -v ${WORKSPACE_DIR}:/app -w /app python:3.11-slim pip install -r requirements.txt
-                """
+                script {
+                    def path = env.WORKSPACE.replace('\\', '/')
+                    bat """
+                    docker run --rm -v ${path}:/app -w /app python:3.11-slim pip install -r requirements.txt
+                    """
+                }
             }
         }
 
