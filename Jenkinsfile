@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_HUB_CREDENTIALS = 'docker-hub-credentials-id' // Vamos configurar isso no Jenkins depois
+        DOCKER_HUB_CREDENTIALS = 'docker-hub-credentials-id'
         IMAGE_NAME = 'mauriciobertoldo/backend-fastapi'
     }
 
@@ -15,16 +15,15 @@ pipeline {
 
         stage('Install dependencies') {
             steps {
-                sh 'pip install -r requirements.txt'
+                bat 'pip install -r requirements.txt'
             }
         }
 
         stage('Run tests') {
             steps {
-                // Coloque aqui seu comando de teste, se tiver
-                // Se não tiver, pode comentar ou pular essa etapa
-                // sh 'pytest tests/'
                 echo 'Sem testes configurados, pulando etapa'
+                // Se tiver testes, troque o comando sh por bat
+                // bat 'pytest tests/'
             }
         }
 
